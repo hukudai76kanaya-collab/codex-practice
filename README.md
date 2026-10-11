@@ -65,11 +65,26 @@ npm run dev -- --port 5173 --strictPort
 
 Vite の `base` を `./` にして、リポジトリ名のパス配下で動作するようにしています。
 
-1. リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に設定します。
-2. `main` への push、または **Actions → Deploy to GitHub Pages → Run workflow** で公開します。
-3. ワークフローの `github-pages` 環境に表示される公開 URL を、iPhone の Safari で開きます。
+### iPhone で最初に行う操作
 
-ワークフローは Node.js 24 で `npm ci` と本番ビルドを実行し、生成した `dist/` を公開します。開発サーバーは公開後のサイト表示には不要です。
+1. Safari で GitHub にログインし、[このリポジトリの Pages 設定](https://github.com/hukudai76kanaya-collab/codex-practice/settings/pages)を開きます。操作欄が表示されない場合は、Safari のページメニューから **デスクトップ用Webサイトを表示** を選びます。
+2. **Build and deployment → Source** を **GitHub Actions** に設定します。`Deploy from a branch` は選びません。
+3. [公開ワークフロー](https://github.com/hukudai76kanaya-collab/codex-practice/actions/workflows/deploy-pages.yml)を開き、**Run workflow** → **Branch: main** → 緑色の **Run workflow** を押します。
+4. 新しく作成された実行を開きます。`build` と `deploy` が両方緑色になったら、**Settings → Pages → Visit site**、または実行画面の `github-pages` に表示される URL を Safari で開きます。更新がすぐに表示されない場合は、少し待って再読み込みします。
+
+リポジトリは現在 Private です。GitHub Free では Public リポジトリでのみ Pages を使えます。Pages 設定にプラン変更の案内が表示された場合は、Private リポジトリの Pages に対応するプラン（個人アカウントでは GitHub Pro など）を利用するか、リポジトリを Public に変更してください。Public にするとソースコードも公開されます。
+
+Public への変更は、[Settings → General](https://github.com/hukudai76kanaya-collab/codex-practice/settings)の下部にある **Danger Zone → Change repository visibility → Change visibility → Make public** から行います。確認画面の指示に従い、変更後に Pages の設定をやり直します。変更操作はリポジトリ管理者が行ってください。
+
+### 失敗した場合
+
+- **Configure GitHub Pages** で失敗: Source が **GitHub Actions** になっているか、現在のプランで Pages を使えるか確認します。設定後に **Run workflow** で新しい実行を開始してください。
+- **Waiting** / **Review deployments**: `github-pages` 環境の承認が必要です。公開する実行を確認して、画面の **Review deployments** から承認してください。
+- Actions 自体が無効の場合: 管理者が **Settings → Actions → General** で GitHub Actions と使用中の公式 `actions/*` を許可します。
+
+一度設定すると、以降は `main` への push で自動的にサイトが更新されます。リポジトリの Source 設定はブラウザから行うため、個人アクセストークンをアプリに追加する必要はありません。
+
+ワークフローは Node.js 24 で `npm ci` と本番ビルドを実行し、Pages の設定を確認して、生成した `dist/` を公開します。Actions 自体も Node.js 24 対応版を使っています。開発サーバーは公開後のサイト表示には不要です。
 
 ## 保存について
 
